@@ -82,7 +82,7 @@ static const char vorbis_title[] = "TITLE=";
 static const char vorbis_album[] = "ALBUM=";
 
 typedef struct {
-    int16_t  buf[1 << 15];
+    int16_t  buf[32768];
     uint32_t len;
 } pcm_data_t;
 
@@ -957,7 +957,7 @@ void *open_file(musicfile *musicfile, const v3_codec *codec) {
 }
 
 int get_pcm_frame(musicfile *musicfile, int channels, int16_t *buf, int *pcmread) {
-    unsigned char readbuffer[1 << 16];
+    unsigned char readbuffer[65536];
     int16_t *readptr;
     size_t numdecoded;
     int err;

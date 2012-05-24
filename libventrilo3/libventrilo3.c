@@ -2121,7 +2121,7 @@ _v3_audio_encode(
                 opusenc = NULL;
             }
             opuschans = channels;
-            if (!(opusenc = opus_encoder_create(48000, opuschans, OPUS_APPLICATION_AUDIO, &ret))) {
+            if (!(opusenc = opus_encoder_create(codec->rate, opuschans, OPUS_APPLICATION_AUDIO, &ret))) {
                 _v3_debug(V3_DEBUG_INFO, "failed to create opus encoder: %s", opus_strerror(ret));
                 opusenc = NULL;
                 break;
@@ -2300,16 +2300,16 @@ _v3_audio_decode(
         int ret;
 
         if (!decoder->opus) {
-            if (!(decoder->opus = opus_decoder_create(48000, 2, &ret))) {
+            if (!(decoder->opus = opus_decoder_create(codec->rate, 2, &ret))) {
                 _v3_debug(V3_DEBUG_INFO, "failed to create opus decoder: %s", opus_strerror(ret));
                 decoder->opus = NULL;
                 break;
             }
         }
-        if (opus_decode(decoder->opus, data, datalen, (void *)sample, codec->pcmframesize / sizeof(int16_t), 0) <= 0) {
+        if ((ret = opus_decode(decoder->opus, data, datalen, (void *)sample, pcmmaxlen / sizeof(int16_t), 0)) <= 0) {
             _v3_debug(V3_DEBUG_INFO, "failed to decode opus packet");
         }
-        *pcmlen += codec->pcmframesize * 2;
+        *pcmlen += ret * sizeof(int16_t) * 2;
         if (channels) {
             *channels = 2;
         }
