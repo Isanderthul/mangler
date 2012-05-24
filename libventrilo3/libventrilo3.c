@@ -43,9 +43,9 @@
 #include <windows.h>
 #include <pthread.h>
 
-#define fsync 		_commit
-#define inet_aton 	mingw_inet_aton
-#define pipe(fds) 	_pipe(fds, 5000, _O_BINARY)
+#define fsync       _commit
+#define inet_aton   mingw_inet_aton
+#define pipe(fds)   _pipe(fds, 5000, _O_BINARY)
 #endif
 
 #if HAVE_SPEEX_DSP
@@ -2063,7 +2063,7 @@ _v3_audio_encode(
         _v3_func_leave("_v3_audio_encode");
         return NULL;
     }
-	
+
     channels = (channels == 2) ? 2 : 1;
     switch (codec->codec) {
 #if HAVE_GSM
@@ -2073,7 +2073,7 @@ _v3_audio_encode(
         uint16_t frame_count = pcmlen / 640;
         uint16_t gsmdatabuf  = frame_count * 65;
         uint8_t *gsmdata     = NULL;
-		uint32_t ctr;
+        uint32_t ctr;
 
         _v3_debug(V3_DEBUG_INFO, "encoding %d bytes of PCM to GSM @ %lu", pcmlen, codec->rate);
         if (channels > 1) {
@@ -2091,7 +2091,7 @@ _v3_audio_encode(
         _v3_debug(V3_DEBUG_MEMORY, "allocating %lu bytes for %d gsm frames", gsmdatabuf, frame_count);
         gsmdata = malloc(gsmdatabuf);
         memset(gsmdata, 0, gsmdatabuf);
-		
+
         for (ctr = 0; ctr < frame_count; ctr++) {
             _v3_debug(V3_DEBUG_INFO, "encoding gsm frame %d", ctr+1);
             gsm_encode(gsmenc, (void *)sample+(ctr*640), gsmdata+(ctr*65));
@@ -2112,7 +2112,7 @@ _v3_audio_encode(
         static uint8_t opuschans = 0;
         uint16_t opusdatabuf     = (codec->codec == 0x01) ? 198 : 108;
         uint8_t *opusdata        = NULL;
-		int ret;
+        int ret;
 
         _v3_debug(V3_DEBUG_INFO, "encoding %d bytes of PCM to Opus @ %lu", pcmlen, codec->rate);
         if (!opusenc || channels != opuschans) {
@@ -2174,7 +2174,7 @@ _v3_audio_encode(
         uint8_t *spxdata         = NULL;
         uint16_t spxdatalen      = 0;
         uint16_t *spxhead        = NULL;
-		uint32_t ctr;
+        uint32_t ctr;
         SpeexBits bits;
 
         _v3_debug(V3_DEBUG_INFO, "encoding %d bytes of PCM to SPEEX @ %lu", pcmlen, codec->rate);
@@ -3492,11 +3492,11 @@ v3_vrf_record_start(const char *filename) {/*{{{*/
     }
     if ((vrfh->file = open(filename, 
 #ifndef _WIN32
-		O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
+        O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
 #else
-		O_RDWR | O_CREAT | O_TRUNC
+        O_RDWR | O_CREAT | O_TRUNC
 #endif
-		)) < 0) {
+        )) < 0) {
         _v3_error("%s: create file for writing failed: %s", filename, strerror(errno));
         v3_vrf_destroy(vrfh);
         _v3_func_leave("v3_vrf_record_start");
@@ -5315,7 +5315,7 @@ v3_login(char *server, char *username, char *password, char *phonetic) {/*{{{*/
         _v3_func_leave("v3_login");
         return false;
     }
-	
+
 #ifndef _WIN32
     int ctr, flags;
     for (ctr = 0; ctr < 2; ctr++) {
@@ -5332,9 +5332,9 @@ v3_login(char *server, char *username, char *password, char *phonetic) {/*{{{*/
         }
     }
 #else
-	// TODO: Support non-blocking mode in windows.
+    // TODO: Support non-blocking mode in windows.
 #endif
-	
+
     /*
      * Initialize the server and user structures.
      */

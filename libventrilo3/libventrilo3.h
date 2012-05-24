@@ -701,7 +701,7 @@ v3_event                *_v3_create_event(uint16_t event);
 
 #ifdef _WIN32
 // TODO: May want to move these function definitions to a windows specific header file.
-int 					mingw_inet_aton(const char *cp, struct in_addr *addr);
+int                     mingw_inet_aton(const char *cp, struct in_addr *addr);
 #endif
 
 #if HAVE_SPEEX_DSP
