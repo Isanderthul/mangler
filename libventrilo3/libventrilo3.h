@@ -410,9 +410,9 @@ v3_codec v3_codecs[] = {
     { 0, 2, 640, 22050, -1, "GSM 6.10 22kHz" },
     { 0, 3, 640, 44100, -1, "GSM 6.10 44kHz" },
 #endif
-#if HAVE_CELT
-    { 1, 0, 640, 44100, -1, "CELT 0.7 44kHz" },
-    { 2, 0, 640, 22050, -1, "CELT 0.7 22kHz" },
+#if HAVE_OPUS
+    { 1, 0, 960*2, 48000, -1, "Opus 48kHz" },
+    { 2, 0, 960*2, 48000, -1, "Opus 48kHz" },
 #endif
 #if HAVE_SPEEX
     { 3, 0, 320, 8000, 0, "Speex 8kHz Quality 0" },
@@ -456,13 +456,15 @@ typedef struct __v3_decoders {
 #if HAVE_GSM
     void *gsm;
 #endif
+#if HAVE_SPEEX
     uint32_t speexrate;
     void *speex;
-#if HAVE_CELT
-    uint8_t celtchans;
-    void *celtmode;
-    void *celt;
 #endif
+#if HAVE_OPUS
+    void *opus;
+    uint8_t opuschans;
+#endif
+    int _pad_;
 } _v3_decoders;
 
 _v3_decoders v3_decoders[65535];
@@ -718,9 +720,7 @@ uint8_t *_v3_audio_encode(
                 const v3_codec *codec,
                 uint16_t *datalen,
                 /* optional args */
-                uint8_t channels,
-                uint16_t *framecount,
-                uint8_t *celtfragsize);
+                uint8_t channels);
 int _v3_audio_decode(
                 /* encoded input */
                 const v3_codec *codec,
@@ -731,7 +731,7 @@ int _v3_audio_decode(
                 uint8_t *sample,
                 uint32_t *pcmlen,
                 /* optional args */
-                uint8_t channels);
+                uint8_t *channels);
 
 #endif // _LIBVENTRILO3_H
 

@@ -50,7 +50,7 @@ dev:
 		manglerchat.cpp  manglerprivchat.cpp  manglercharset.cpp  manglerintegration.cpp \
 		mangleradmin.cpp  manglerrecorder.cpp  manglerosd.cpp  manglerg15.cpp \
 		inilib.cpp ../libventrilo3/libventrilo3.a \
-		$(pulse_LIBS) $(alsa_LIBS) $(speex_LIBS) $(celt_LIBS) $(LIBS) \
+		$(pulse_LIBS) $(alsa_LIBS) $(speex_LIBS) $(opus_LIBS) $(LIBS) \
 		`pkg-config --cflags --libs dbus-glib-1` \
 		`pkg-config --cflags --libs gthread-2.0` \
 		`pkg-config --cflags --libs gtkmm-2.4`

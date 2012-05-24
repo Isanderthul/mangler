@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.63])
-AC_INIT([mangler], [1.2.1], [eric@ypass.net])
+AC_PREREQ([2.68])
+AC_INIT([mangler],[1.2.1],[eric@ypass.net])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE([disable])
 
@@ -19,7 +19,7 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
-AC_PROG_LIBTOOL
+LT_INIT
 
 AX_PTHREAD([
 LIBS="$PTHREAD_LIBS $LIBS"
@@ -39,7 +39,7 @@ AC_CHECK_LIB([m], [tan], [:], [
 
 AC_ARG_ENABLE(gsm,    [  --disable-gsm           disable GSM codec support], [disable_gsm=yes])
 AC_ARG_ENABLE(speex,  [  --disable-speex         disable Speex codec support], [disable_speex=yes])
-AC_ARG_ENABLE(celt,   [  --disable-celt          disable CELT codec support], [disable_celt=yes])
+AC_ARG_ENABLE(opus,   [  --disable-opus          disable Opus codec support], [disable_opus=yes])
 AC_ARG_ENABLE(xosd,   [  --disable-xosd          disable XOSD overlay support], [disable_xosd=yes])
 AC_ARG_ENABLE(g15,    [  --disable-g15           disable Logitech G15 keyboard support], [disable_g15=yes])
 AC_ARG_ENABLE(espeak, [  --disable-espeak        disable eSpeak text to speech support], [disable_espeak=yes])
@@ -75,18 +75,18 @@ else
 	AC_DEFINE(HAVE_SPEEX, 0, [have speex])
 fi
 
-if test "$enable_celt" != "no" ; then
-	PKG_CHECK_MODULES(celt, celt = 0.7.1, [
-		AC_DEFINE(HAVE_CELT, 1, [have celt])
-		AC_SUBST(celt_CFLAGS)
-		AC_SUBST(celt_LIBS)
-		echo "Enabled optional CELT support."
+if test "$enable_opus" != "no" ; then
+	PKG_CHECK_MODULES(opus, opus >= 0.9.11, [
+		AC_DEFINE(HAVE_OPUS, 1, [have opus])
+		AC_SUBST(opus_CFLAGS)
+		AC_SUBST(opus_LIBS)
+		echo "Enabled optional Opus codec support."
 	], [
-		AC_DEFINE(HAVE_CELT, 0, [have celt])
-		echo "Optional CELT support is not enabled."
+		AC_DEFINE(HAVE_OPUS, 0, [have opus])
+		echo "Optional Opus codec support is not enabled."
 	])
 else
-	echo "Disabled optional CELT support."
+	echo "Disabled optional Opus codec support."
 fi
 
 if test "$disable_ui" != "yes" ; then

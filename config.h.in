@@ -6,9 +6,6 @@
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
 
-/* have celt */
-#undef HAVE_CELT
-
 /* have dbus */
 #undef HAVE_DBUS
 
@@ -66,6 +63,9 @@
 
 /* Define to 1 if you have the <netinet/in.h> header file. */
 #undef HAVE_NETINET_IN_H
+
+/* have opus */
+#undef HAVE_OPUS
 
 /* have oss */
 #undef HAVE_OSS

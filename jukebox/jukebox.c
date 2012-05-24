@@ -198,7 +198,7 @@ void ctrl_c(int signum) {
 }
 
 void usage(char *argv[]) {
-    fprintf(stderr, "usage: %s -h hostname:port -u username [-p password] [-c channelid] [-v volume_multipler] [-s disable stereo for celt] [-n don't shuffle] /path/to/music\n", argv[0]);
+    fprintf(stderr, "usage: %s -h hostname:port -u username [-p password] [-c channelid] [-v volume_multipler] [-s disable stereo for opus] [-n don't shuffle] /path/to/music\n", argv[0]);
     exit(EXIT_FAILURE);
 }
 
@@ -1029,7 +1029,7 @@ int get_pcm_frame(musicfile *musicfile, int channels, int16_t *buf, int *pcmread
             return false;
         }
         readptr = (int16_t *)readbuffer;
-        if (channels == 1) { // no channels to mix; this is for celt stereo mode
+        if (channels == 1) { // no channels to mix; this is for opus stereo mode
             memcpy(buf, readbuffer, *pcmread);
         } else for (ctr = 0; ctr < *pcmread/2; ctr++) {
             buf[ctr] = (readptr[ctr*2] + readptr[ctr*2+1]) / 2;
@@ -1235,7 +1235,7 @@ main(int argc, char **argv) {
         fprintf(stderr, "not shuffling musiclist\n");
     }
     if (!disable_stereo) {
-        fprintf(stderr, "will use 2 channels for the CELT codec\n");
+        fprintf(stderr, "will use 2 channels for the Opus codec (replacing channel codecs truespeech and lernout & hauspie)\n");
     }
     if (debug >= 2) {
         v3_debuglevel(V3_DEBUG_ALL);

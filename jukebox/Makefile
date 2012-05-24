@@ -8,7 +8,7 @@ all:
 		../libventrilo3/libventrilo3.a \
 		-lgsm \
 		-lspeex \
-		`if grep "HAVE_CELT 1" ../config.h >/dev/null; then pkg-config --cflags --libs celt; fi` \
+		`if grep -q "HAVE_OPUS 1" ../config.h; then pkg-config --cflags --libs opus; fi` \
 		-lmpg123 \
 		-lspeexdsp \
 		`if pkg-config vorbisfile; then echo -n "-lvorbisfile"; fi` \
