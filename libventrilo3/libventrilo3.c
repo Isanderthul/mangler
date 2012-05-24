@@ -2297,16 +2297,10 @@ _v3_audio_decode(
       case 0x01: // OPUS
       case 0x02:
       {
-        uint8_t opuschans = opus_packet_get_nb_channels(data);
         int ret;
 
-        if (!decoder->opus || decoder->opuschans != opuschans) {
-            if (decoder->opus) {
-                opus_decoder_destroy(decoder->opus);
-                decoder->opus = NULL;
-            }
-            decoder->opuschans = opuschans;
-            if (!(decoder->opus = opus_decoder_create(48000, opuschans, &ret))) {
+        if (!decoder->opus) {
+            if (!(decoder->opus = opus_decoder_create(48000, 2, &ret))) {
                 _v3_debug(V3_DEBUG_INFO, "failed to create opus decoder: %s", opus_strerror(ret));
                 decoder->opus = NULL;
                 break;
@@ -2315,9 +2309,9 @@ _v3_audio_decode(
         if (opus_decode(decoder->opus, data, datalen, (void *)sample, codec->pcmframesize / sizeof(int16_t), 0) <= 0) {
             _v3_debug(V3_DEBUG_INFO, "failed to decode opus packet");
         }
-        *pcmlen += codec->pcmframesize * opuschans;
+        *pcmlen += codec->pcmframesize * 2;
         if (channels) {
-            *channels = opuschans;
+            *channels = 2;
         }
         _v3_func_leave("_v3_audio_decode");
         return V3_OK;

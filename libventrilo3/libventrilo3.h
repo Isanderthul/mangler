@@ -462,7 +462,6 @@ typedef struct __v3_decoders {
 #endif
 #if HAVE_OPUS
     void *opus;
-    uint8_t opuschans;
 #endif
     int _pad_;
 } _v3_decoders;
