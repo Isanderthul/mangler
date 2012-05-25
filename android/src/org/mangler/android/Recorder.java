@@ -38,16 +38,15 @@ public class Recorder {
 	private static int buflen;
 	private static boolean force_8khz;
 
-	
 	private static class RecordThread implements Runnable {
 		public void run() {
 			AudioRecord audiorecord = null;
 			byte[] buf = null; // send buffer
 			
-			Log.e("recorder", "lv3 says " + VentriloInterface.pcmlengthforrate(rate()) + " for rate " + rate());
-			if (buflen < VentriloInterface.pcmlengthforrate(rate())) {
-				Log.e("debug", "setting buffer length to " + VentriloInterface.pcmlengthforrate(rate()));
-				buflen = VentriloInterface.pcmlengthforrate(rate());
+			Log.e("recorder", "lv3 says " + VentriloInterface.pcmlengthforrate(rate) + " for rate " + rate);
+			if (rate != 48000 && buflen < VentriloInterface.pcmlengthforrate(rate)) {
+				Log.e("debug", "setting buffer length to " + VentriloInterface.pcmlengthforrate(rate));
+				buflen = VentriloInterface.pcmlengthforrate(rate);
 			}
 			Log.e("recorder", "buflen is " + buflen);
 			
@@ -63,8 +62,7 @@ public class Recorder {
 					rate,
 					AudioFormat.CHANNEL_CONFIGURATION_MONO,
 					AudioFormat.ENCODING_PCM_16BIT,
-					buflen
-			);
+					buflen);
 			Log.e("mangler", "audio record initialized");
 			try {
 				audiorecord.startRecording();
@@ -103,15 +101,21 @@ public class Recorder {
 		Log.e("mangler", "checking available buffer sizes");
 		if (isForce_8khz()) {
 			rate(8000);
-			return(AudioRecord.getMinBufferSize(
+			return AudioRecord.getMinBufferSize(
 					8000,
 					AudioFormat.CHANNEL_CONFIGURATION_MONO,
-					AudioFormat.ENCODING_PCM_16BIT));
+					AudioFormat.ENCODING_PCM_16BIT);
+		}
+		if (rate == 48000) {
+			return AudioRecord.getMinBufferSize(
+					48000,
+					AudioFormat.CHANNEL_CONFIGURATION_MONO,
+					AudioFormat.ENCODING_PCM_16BIT);
 		}
 		final int[] rates = { 8000, 11025, 16000, 22050, 32000, 44100 };
 		for (int cur = 0; cur < rates.length; cur++) {
 			// find the current rate in the rates array
-			if (rates[cur] == rate()) {
+			if (rates[cur] != rate) {
 				int buffer = 0;
 				// try current and higher rates
 				for (int ctr = cur; ctr < rates.length; ctr++) {
@@ -120,10 +124,11 @@ public class Recorder {
 							rates[ctr],
 							AudioFormat.CHANNEL_CONFIGURATION_MONO,
 							AudioFormat.ENCODING_PCM_16BIT);
-					if (buffer > 0  && buffer < VentriloInterface.pcmlengthforrate(rates[ctr])) {
+					Log.d("mangler", "getMinBufferSize returned: " + buffer);
+					if (buffer > 0 && buffer <= VentriloInterface.pcmlengthforrate(rates[ctr])) {
 						// found a supported rate
 						// override if it is not the channel rate and use the resampler
-						if (rates[ctr] != rate()) {
+						if (rates[ctr] != rate) {
 							Log.e("mangler", "" + rates[ctr] + " -- buffer: " + buffer + " - pcmlen: " + VentriloInterface.pcmlengthforrate(rates[ctr]));
 							rate(rates[ctr]);
 						}
@@ -137,8 +142,8 @@ public class Recorder {
 							rates[ctr],
 							AudioFormat.CHANNEL_CONFIGURATION_MONO,
 							AudioFormat.ENCODING_PCM_16BIT);
-					if (buffer > 0 && buffer < VentriloInterface.pcmlengthforrate(rates[ctr])) {
-						if (rates[ctr] != rate()) {
+					if (buffer > 0 && buffer <= VentriloInterface.pcmlengthforrate(rates[ctr])) {
+						if (rates[ctr] != rate) {
 							Log.e("mangler", "" + rates[ctr] + " -- buffer: " + buffer + " - pcmlen: " + VentriloInterface.pcmlengthforrate(rates[ctr]));
 							rate(rates[ctr]);
 						}

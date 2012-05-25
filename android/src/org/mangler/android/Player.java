@@ -43,15 +43,14 @@ public class Player {
 		close(id);
 		try {
 			audiotrack = new AudioTrack(
-				AudioManager.STREAM_MUSIC,
-				rate,
-				(channels == 2)
-					? AudioFormat.CHANNEL_CONFIGURATION_STEREO
-					: AudioFormat.CHANNEL_CONFIGURATION_MONO,
-				AudioFormat.ENCODING_PCM_16BIT,
-				buffer,
-				AudioTrack.MODE_STREAM
-			);
+					AudioManager.STREAM_MUSIC,
+					rate,
+					(channels == 2)
+						? AudioFormat.CHANNEL_CONFIGURATION_STEREO
+						: AudioFormat.CHANNEL_CONFIGURATION_MONO,
+					AudioFormat.ENCODING_PCM_16BIT,
+					buffer,
+					AudioTrack.MODE_STREAM);
 			audiotracks.put(id, audiotrack);
 			return audiotrack;
 		}
@@ -96,12 +95,20 @@ public class Player {
 	public static void write(final short id, final int rate, final byte channels, final byte[] sample, final int length) {
 		AudioTrack audiotrack;
 		if ((audiotrack = audiotracks.get(id)) == null) {
-			audiotrack = open(id, rate, channels, VentriloInterface.pcmlengthforrate(rate) * channels * 2);
+			audiotrack = open(id, rate, channels,
+					(rate == 48000)
+						? AudioTrack.getMinBufferSize(
+								48000,
+								(channels == 2)
+									? AudioFormat.CHANNEL_CONFIGURATION_STEREO
+									: AudioFormat.CHANNEL_CONFIGURATION_MONO,
+								AudioFormat.ENCODING_PCM_16BIT)
+						: VentriloInterface.pcmlengthforrate(rate) * channels * 2);
 			audiotrack.play();
 		}
 		audiotrack.write(sample, 0, length);
 	}
-	
+
 	public static void setVolume(final float volume) {
 		for (AudioTrack audiotrack : audiotracks.values()) {
 			audiotrack.setStereoVolume(volume, volume);

@@ -55,7 +55,11 @@
 # include <speex/speex.h>
 #endif
 #if HAVE_OPUS
-# include <opus/opus.h>
+# ifdef HAVE_OPUS_H
+#  include <opus.h>
+# else
+#  include <opus/opus.h>
+# endif
 #endif
 #ifdef HAVE_GSM_H
 # include <gsm.h>
@@ -2121,12 +2125,24 @@ _v3_audio_encode(
                 opusenc = NULL;
             }
             opuschans = channels;
-            if (!(opusenc = opus_encoder_create(codec->rate, opuschans, OPUS_APPLICATION_AUDIO, &ret))) {
+            if (!(opusenc = opus_encoder_create(codec->rate, opuschans,
+#ifdef ANDROID
+                OPUS_APPLICATION_VOIP
+#else
+                OPUS_APPLICATION_AUDIO
+#endif
+                , &ret))) {
                 _v3_debug(V3_DEBUG_INFO, "failed to create opus encoder: %s", opus_strerror(ret));
                 opusenc = NULL;
                 break;
             }
-            if ((ret = opus_encoder_ctl(opusenc, OPUS_SET_COMPLEXITY(10))) != OPUS_OK) {
+            if ((ret = opus_encoder_ctl(opusenc,
+#ifdef ANDROID
+                OPUS_SET_COMPLEXITY(0)
+#else
+                OPUS_SET_COMPLEXITY(10)
+#endif
+                )) != OPUS_OK) {
                 _v3_debug(V3_DEBUG_INFO, "opus_encoder_ctl: OPUS_SET_COMPLEXITY: %s", opus_strerror(ret));
                 opus_encoder_destroy(opusenc);
                 opusenc = NULL;
