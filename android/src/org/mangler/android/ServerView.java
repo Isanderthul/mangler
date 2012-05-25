@@ -59,6 +59,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
@@ -446,19 +447,27 @@ public class ServerView extends TabActivity {
 	public boolean getIsAdmin() {
 		return isAdmin;
 	}
+	
+	private void messagesAppend(String append) {
+		final ScrollView scrollview = (ScrollView)findViewById(R.id.chatScroll);
+		((TextView)findViewById(R.id.messages)).append(append);
+		scrollview.post(new Runnable() {
+			public void run() {
+				scrollview.fullScroll(View.FOCUS_DOWN);
+			}
+		});
+	}
+	
 	public void addChatMessage(String username, String message) {
-		final TextView messages = (TextView)findViewById(R.id.messages);
-		messages.append("\n" + username  + ": " + message);
+		messagesAppend("\n" + username  + ": " + message);
 	}
 	
 	public void addChatUser(String username) {
-		final TextView messages = (TextView)findViewById(R.id.messages);
-		messages.append("\n* " + username + " has joined the chat.");
+		messagesAppend("\n* " + username + " has joined the chat.");
 	}
 	
 	public void removeChatUser(String username) {
-		final TextView messages = (TextView)findViewById(R.id.messages);
-		messages.append("\n* " + username + " has left the chat.");
+		messagesAppend("\n* " + username + " has left the chat.");
 	}
 	
 	public void notifyAdaptersDataSetChanged() {
