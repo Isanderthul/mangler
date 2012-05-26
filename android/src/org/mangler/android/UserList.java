@@ -52,7 +52,7 @@ public class UserList {
 			user.put("userid", entity.id);
 			user.put("username", entity.name);
 			user.put("channelid", entity.parentid);
-			user.put("comment", entity.comment.length() > 0 ? "(" + entity.comment + ")" : "");
+			user.put("comment", (entity.comment.length() > 0) ? "(" + ((entity.url.length() > 0) ? "U: " : "") + entity.comment + ")" : "");
 			data.add(user);
 	}
 	

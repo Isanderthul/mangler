@@ -3500,7 +3500,7 @@ v3_vrf_record_start(const char *filename) {/*{{{*/
         _v3_func_leave("v3_vrf_record_start");
         return V3_FAILURE;
     }
-    if ((vrfh->file = open(filename, 
+    if ((vrfh->file = open(filename,
 #ifndef _WIN32
         O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
 #else

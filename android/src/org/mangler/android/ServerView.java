@@ -40,6 +40,7 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.text.InputType;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -448,9 +449,11 @@ public class ServerView extends TabActivity {
 		return isAdmin;
 	}
 	
-	private void messagesAppend(String append) {
+	private void messagesAppend(String text) {
+		final TextView textview = (TextView)findViewById(R.id.messages);
 		final ScrollView scrollview = (ScrollView)findViewById(R.id.chatScroll);
-		((TextView)findViewById(R.id.messages)).append(append);
+		textview.append(text);
+		Linkify.addLinks(textview, Linkify.ALL);
 		scrollview.post(new Runnable() {
 			public void run() {
 				scrollview.fullScroll(View.FOCUS_DOWN);
@@ -726,7 +729,7 @@ public class ServerView extends TabActivity {
 						input.setText(entity.comment);
 						AlertDialog.Builder alert = new AlertDialog.Builder(this)
 						.setTitle("Comment")
-						.setMessage("Enter your comment:")
+						.setMessage("Enter a comment:")
 						.setView(input)
 						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
@@ -832,11 +835,12 @@ public class ServerView extends TabActivity {
 	}
 	
 	private void viewComment(short id) {
-		ChannelListEntity entity = new ChannelListEntity(ChannelListEntity.USER, id);
-		AlertDialog.Builder alert = new AlertDialog.Builder(this)
-		.setTitle(entity.name)
-		.setMessage("Comment: " + entity.comment + "\n" + "URL: " + entity.url);
-		alert.show();
+		final ChannelListEntity entity = new ChannelListEntity(ChannelListEntity.USER, id);
+		TextView comment = new TextView(this);
+		comment.setPadding(15, 0, 15, 0);
+		comment.setText("Comment: " + entity.comment + "\n" + "URL: " + entity.url);
+		Linkify.addLinks(comment, Linkify.ALL);
+		new AlertDialog.Builder(this).setTitle(entity.name).setView(comment).show();
 	}
 
 	private OnTouchListener onTalkPress = new OnTouchListener() {
