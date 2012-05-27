@@ -1,3 +1,9 @@
+mangler (1.2.3) stable; urgency=low Sun, 27 May 2012 14:56:02 -0600
+  * replaced celt with opus libraries
+  * linkified comments and URLS in the user information for android version
+  * fixed chat scrolling in android
+  * fixed private chat window send button upon a reopened session
+
 mangler (1.2.2) stable; urgency=low Sat, 23 Apr 2011 21:52:05 -0600
   * added an input gain slider on the audio menu
   * fixed a TTS crash
