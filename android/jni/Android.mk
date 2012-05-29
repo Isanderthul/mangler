@@ -9,7 +9,7 @@ LOCAL_SRC_FILES		:= add.c			code.c				debug.c				decode.c \
 				       gsm_destroy.c	gsm_decode.c		gsm_encode.c		gsm_explode.c \
 				       gsm_implode.c	gsm_create.c		gsm_print.c			gsm_option.c \
 				       short_term.c		table.c
-LOCAL_CFLAGS		:= -I$(LOCAL_PATH)/../inc -DWAV49 -O3
+LOCAL_CFLAGS		:= -I$(LOCAL_PATH)/../inc -DWAV49 -O3 -fno-math-errno
 include $(BUILD_STATIC_LIBRARY)
 
 # Build libspeex
@@ -24,7 +24,7 @@ LOCAL_SRC_FILES		:= cb_search.c		exc_10_32_table.c 	exc_8_128_table.c 	filters.c
 					   lsp_tables_nb.c 	modes.c 			modes_wb.c 			nb_celp.c \
 					   quant_lsp.c		sb_celp.c			speex_callbacks.c 	speex_header.c \
 					   window.c			resample.c
-LOCAL_CFLAGS		:= -I$(LOCAL_PATH)/../include -D__EMX__ -DFIXED_POINT -DEXPORT='' -O3
+LOCAL_CFLAGS		:= -I$(LOCAL_PATH)/../include -D__EMX__ -DFIXED_POINT -DEXPORT='' -O3 -fno-math-errno
 include $(BUILD_STATIC_LIBRARY)
 
 # Build libopus
@@ -92,7 +92,7 @@ LOCAL_SRC_FILES		:= celt/bands.c								celt/celt.c \
 					   silk/fixed/schur_FIX.c					src/opus.c \
 					   src/opus_decoder.c						src/opus_encoder.c \
 					   src/opus_multistream.c					src/repacketizer.c
-LOCAL_CFLAGS		:= -I$(LOCAL_PATH)/include -I$(LOCAL_PATH)/celt -I$(LOCAL_PATH)/silk -I$(LOCAL_PATH)/silk/fixed -Drestrict='' -D__EMX__ -DOPUS_BUILD -DFIXED_POINT -DUSE_ALLOCA -DHAVE_LRINT -DHAVE_LRINTF -O3
+LOCAL_CFLAGS		:= -I$(LOCAL_PATH)/include -I$(LOCAL_PATH)/celt -I$(LOCAL_PATH)/silk -I$(LOCAL_PATH)/silk/fixed -Drestrict='' -D__EMX__ -DOPUS_BUILD -DFIXED_POINT -DUSE_ALLOCA -DHAVE_LRINT -DHAVE_LRINTF -O3 -fno-math-errno
 include $(BUILD_STATIC_LIBRARY)
 
 # Build libventrilo3
@@ -100,7 +100,7 @@ include $(CLEAR_VARS)
 LOCAL_PATH				:= $(LIBPATH)
 LOCAL_MODULE    		:= libventrilo3
 LOCAL_SRC_FILES 		:= libventrilo3.c libventrilo3_message.c ventrilo3_handshake.c
-LOCAL_CFLAGS			:= -DANDROID -D__EMX__ -I$(ROOT)/gsm/inc -I$(ROOT)/speex/include -I$(ROOT)/opus/include -DHAVE_GSM=1 -DHAVE_GSM_H -DHAVE_SPEEX=1 -DHAVE_SPEEX_DSP=1 -DHAVE_OPUS=1 -DHAVE_OPUS_H -DNO_AUTOMAKE -O3
+LOCAL_CFLAGS			:= -DANDROID -D__EMX__ -I$(ROOT)/gsm/inc -I$(ROOT)/speex/include -I$(ROOT)/opus/include -DHAVE_GSM=1 -DHAVE_GSM_H -DHAVE_SPEEX=1 -DHAVE_SPEEX_DSP=1 -DHAVE_OPUS=1 -DHAVE_OPUS_H -DNO_AUTOMAKE -O3 -fno-math-errno
 include $(BUILD_STATIC_LIBRARY)
 
 # Build library interface
@@ -109,6 +109,6 @@ LOCAL_PATH				:= $(ROOT)/ventrilo
 LOCAL_MODULE    		:= libventrilo_interface
 LOCAL_SRC_FILES 		:= jni_wrappers.c
 LOCAL_LDLIBS			:= -llog
-LOCAL_CFLAGS			:= -I$(LIBPATH) -O3
+LOCAL_CFLAGS			:= -I$(LIBPATH) -O3 -fno-math-errno
 LOCAL_STATIC_LIBRARIES	:= libventrilo3 libgsm libspeex libopus
 include $(BUILD_SHARED_LIBRARY)

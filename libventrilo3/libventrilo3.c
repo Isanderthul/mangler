@@ -2126,22 +2126,22 @@ _v3_audio_encode(
             }
             opuschans = channels;
             if (!(opusenc = opus_encoder_create(codec->rate, opuschans,
-#ifdef ANDROID
+# ifdef ANDROID
                 OPUS_APPLICATION_VOIP
-#else
+# else
                 OPUS_APPLICATION_AUDIO
-#endif
+# endif
                 , &ret))) {
                 _v3_debug(V3_DEBUG_INFO, "failed to create opus encoder: %s", opus_strerror(ret));
                 opusenc = NULL;
                 break;
             }
             if ((ret = opus_encoder_ctl(opusenc,
-#ifdef ANDROID
+# ifdef ANDROID
                 OPUS_SET_COMPLEXITY(0)
-#else
+# else
                 OPUS_SET_COMPLEXITY(10)
-#endif
+# endif
                 )) != OPUS_OK) {
                 _v3_debug(V3_DEBUG_INFO, "opus_encoder_ctl: OPUS_SET_COMPLEXITY: %s", opus_strerror(ret));
                 opus_encoder_destroy(opusenc);
