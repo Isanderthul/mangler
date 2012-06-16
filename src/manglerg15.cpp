@@ -64,6 +64,9 @@ ManglerG15::addevent(Glib::ustring text) {
 void
 ManglerG15::update(Glib::ustring server, Glib::ustring lastXmit,  Glib::ustring serverJoin,  Glib::ustring chanJoin,  Glib::ustring ping) {
     char buf[130];
+    if (fd <= 0) {
+        return;
+    }
     if (server != "") {
         this->server = server;
     }
