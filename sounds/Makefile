@@ -1,38 +1,18 @@
+SOURCE_RAW=channelenter.raw channelleave.raw login.raw logout.raw talkend.raw talkstart.raw
+OBJECT_RAW=$(filter %.h,$(SOURCE_RAW:.raw=.h))
 
 all: mangler-sounds.h
 
-bin2h: bin2h.c
-	gcc -Wall -o bin2h bin2h.c
+bin2h: bin2h.o
 
-mangler-sounds.h: bin2h channelenter.h channelleave.h login.h logout.h talkend.h talkstart.h
-	cat channelenter.h channelleave.h login.h logout.h talkend.h talkstart.h > mangler-sounds.h
-	
-channelenter.h: bin2h channelenter.raw
-	./bin2h channelenter.raw channelenter.h sound_channelenter
+mangler-sounds.h: $(OBJECT_RAW)
+	cat $(OBJECT_RAW) > $@
 
-channelleave.h: bin2h channelleave.raw
-	./bin2h channelleave.raw channelleave.h sound_channelleave
-
-login.h: bin2h login.raw
-	./bin2h login.raw login.h sound_login
-
-logout.h: bin2h logout.raw
-	./bin2h logout.raw logout.h sound_logout
-
-talkend.h: bin2h talkend.raw
-	./bin2h talkend.raw talkend.h sound_talkend
-
-talkstart.h: bin2h talkstart.raw
-	./bin2h talkstart.raw talkstart.h sound_talkstart
+%.h: %.raw bin2h
+	./bin2h $< $@ $(shell echo $@ | sed -e 's/^/sound\_/' -e 's/\..*$$//')
 
 clean:
-	rm -f mangler-sounds.h
-	rm -f channelenter.h
-	rm -f channelleave.h
-	rm -f login.h
-	rm -f logout.h
-	rm -f talkend.h
-	rm -f talkstart.h
+	rm -f mangler-sounds.h $(OBJECT_RAW) *.o
 
 distclean: clean
 	rm -f bin2h
